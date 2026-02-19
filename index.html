@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>YUN PORTFOLIO</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%230a0a0a%22/><text y=%22.9em%22 x=%2250%%22 text-anchor=%22middle%22 font-family=%22serif%22 font-weight=%22bold%22 font-size=%2280%22 fill=%22white%22>Y</text></svg>">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Noto+Sans+KR:wght@100;300;400;700;900&display=swap');
+
+        :root {
+            --accent: #ff3e00;
+            --bg: #0a0a0a;
+            --max-width: 1400px;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: var(--bg);
+            color: #fafafa;
+            margin: 0;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            scroll-behavior: smooth;
+        }
+
+        .space-font { font-family: 'Space Grotesk', sans-serif; }
+
+        .noise-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 30%, #1a1a1a 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, #111111 0%, transparent 40%);
+        }
+
+        .container-custom {
+            max-width: var(--max-width);
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+        @media (min-width: 1024px) {
+            .container-custom {
+                padding-left: 5rem;
+                padding-right: 5rem;
+            }
+        }
+
+        .outline-text {
+            -webkit-text-stroke: 1px rgba(255,255,255,0.3);
+            color: transparent;
+            transition: all 0.5s;
+        }
+        
+        nav.scrolled {
+            background-color: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding-top: 1.25rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .project-card {
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            position: relative;
+        }
+        .project-card:hover {
+            padding-left: 3.5rem;
+            background: rgba(255,255,255,0.015);
+            border-bottom: 1px solid rgba(255, 62, 0, 0.5);
+        }
+
+        .project-title {
+            font-size: clamp(1.4rem, 4vw, 4.2rem);
+            line-height: 1.15;
+            word-break: keep-all;
+            overflow-wrap: break-word;
+            transition: transform 0.5s ease;
+        }
+        .project-card:hover .project-title {
+            transform: translateX(10px);
+        }
+
+        .project-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            min-width: 120px;
+        }
+
+        .project-type-badge {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            padding: 5px 16px;
+            border: 1px solid rgba(255, 62, 0, 0.3);
+            border-radius: 2px;
+            background: linear-gradient(135deg, rgba(255, 62, 0, 0.1) 0%, transparent 100%);
+            color: rgba(255, 255, 255, 0.9);
+            width: fit-content;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+        }
+        .project-card:hover .project-type-badge {
+            background: rgba(255, 62, 0, 1);
+            color: #000;
+            border-color: rgba(255, 62, 0, 1);
+            letter-spacing: 0.35em;
+            padding-left: 22px;
+            padding-right: 22px;
+        }
+
+        #cursor {
+            width: 20px; height: 20px;
+            background: var(--accent);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 999;
+            mix-blend-mode: difference;
+            transition: transform 0.2s ease;
+        }
+
+        .scroll-reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+        .scroll-reveal.active { opacity: 1; transform: translateY(0); }
+
+        #drawer::-webkit-scrollbar { width: 4px; }
+        #drawer::-webkit-scrollbar-track { background: transparent; }
+        #drawer::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+
+        .tool-card {
+            aspect-ratio: 1 / 1;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            border-radius: 1rem;
+            text-align: center;
+        }
+        .tool-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.06);
+        }
+        .tool-card i {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: rgba(255,255,255,0.3);
+            transition: color 0.3s ease;
+        }
+        .tool-card:hover i {
+            color: var(--accent);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 16px;
+            font-size: 0.9rem;
+        }
+        .info-label {
+            color: var(--accent);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .work-item {
+            position: relative;
+            padding-bottom: 2rem;
+        }
+        .work-item:last-child {
+            padding-bottom: 0;
+        }
+        .work-dot {
+            position: absolute;
+            left: -20px;
+            top: 8px;
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+        }
+
+        .tab-btn {
+            position: relative;
+            transition: all 0.3s ease;
+            color: rgba(255, 255, 255, 0.4);
+        }
+        .tab-btn.active {
+            color: var(--accent);
+        }
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 50%;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .tool-animate {
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        .result-card {
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .result-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 62, 0, 0.3);
+            transform: translateY(-4px);
+        }
+        .result-card .result-value {
+            transition: all 0.4s ease;
+        }
+        .result-card:hover .result-value {
+            color: var(--accent);
+            transform: translateX(4px);
+        }
+        .result-card .result-label {
+            transition: all 0.4s ease;
+        }
+        .result-card:hover .result-label {
+            color: rgba(255, 255, 255, 0.8);
+        }
+    </style>
+</head>
+<body>
+    <div id="cursor"></div>
+    <div class="noise-bg"></div>
+
+    <nav id="main-nav" class="fixed top-0 w-full z-50 transition-all duration-300">
+        <div class="container-custom py-8 flex justify-between items-center">
+            <a href="#" class="space-font text-2xl font-bold tracking-tighter mix-blend-difference">YUN PORTFOLIO</a>
+            <div class="space-x-8 text-sm uppercase tracking-widest hidden md:block font-medium mix-blend-difference">
+                <a href="#" class="hover:text-[#ff3e00] transition">Home</a>
+                <a href="#about" class="hover:text-[#ff3e00] transition">About</a>
+                <a href="#tools" class="hover:text-[#ff3e00] transition">Tools</a>
+                <a href="#projects" class="hover:text-[#ff3e00] transition">Projects</a>
+                <a href="#contact" class="hover:text-[#ff3e00] transition">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="min-h-screen flex flex-col justify-center pt-32 pb-24">
+        <div class="container-custom">
+            <h2 class="space-font text-sm uppercase tracking-[0.5em] text-[#ff3e00] mb-6 scroll-reveal">Planning & Strategy Specialist</h2>
+            <h1 class="text-6xl md:text-[8rem] lg:text-[10rem] font-black leading-[0.85] tracking-tighter scroll-reveal" style="transition-delay: 0.2s;">
+                STRATEGIC <br> <span class="outline-text italic">DESIGN</span> <br> THINKING.
+            </h1>
+            <div class="mt-12 flex flex-col md:flex-row gap-8 items-start scroll-reveal" style="transition-delay: 0.4s;">
+                <p class="max-w-3xl text-lg md:text-xl text-gray-400 font-light leading-relaxed">
+                    문제의 본질을 인식하고, 명확한 목표와 체계적인 계획에 따라 해결책을 찾아나가는 능력을<br class="hidden md:block">
+                    발전시키기 위해 다양한 경험을 즐기고 있습니다.<br class="hidden md:block">
+                    이해력과 사고력을 기를 수 있는 ‘독서’, 끈기와 열정을 갖게 해준 ‘마라톤’을 사랑하며<br class="hidden md:block">
+                    <span class="text-white font-medium">어떠한 프로젝트를 담당하더라도 주도적으로 이끌어 나아갈 수 있는 PM</span>을 꿈꿉니다.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="py-48 bg-[#0e0e0e]">
+        <div class="container-custom">
+            <div class="grid md:grid-cols-12 gap-12 lg:gap-20 items-start">
+                <div class="md:col-span-5 scroll-reveal">
+                    <div class="w-full grayscale hover:grayscale-0 transition-all duration-700 relative group flex items-end">
+                        <img src="https://i.postimg.cc/xjMp82br/peulopil-sajin.png" alt="윤희섭 프로필" class="w-full h-auto object-cover opacity-90 group-hover:opacity-100 transition-opacity block rounded-2xl">
+                    </div>
+                    <div class="mt-8 space-y-4 bg-white/5 p-8 rounded-2xl border border-white/5 w-full">
+                        <div class="info-grid border-b border-white/5 pb-3">
+                            <span class="info-label">Name</span>
+                            <span class="text-gray-200 font-medium">윤희섭 (Huiseop Yun)</span>
+                        </div>
+                        <div class="info-grid border-b border-white/5 pb-3">
+                            <span class="info-label">Birth</span>
+                            <span class="text-gray-300">1994. 12. 05 (31세)</span>
+                        </div>
+                        <div class="info-grid border-b border-white/5 pb-3">
+                            <span class="info-label">MBTI</span>
+                            <span class="text-gray-300">ENFJ</span>
+                        </div>
+                        <div class="info-grid border-b border-white/5 pb-3">
+                            <span class="info-label">Email</span>
+                            <span class="text-gray-300 break-all text-sm">hisep1205@gmail.com</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:col-span-7 scroll-reveal" style="transition-delay: 0.2s;">
+                    <h3 class="text-3xl md:text-4xl font-bold mb-8 italic text-white/90 leading-snug">기획은 이해로부터 시작한다.</h3>
+                    <p class="text-gray-400 text-lg leading-relaxed mb-12 font-light">
+                        조금씩 더 나아짐을 추구하는 서비스 기획자 윤희섭입니다.<br>
+                        다양한 프로젝트를 수행하면서 회사에 대한 이해, 나에게 맡겨진 업무/프로젝트에 대한 이해, 우리 서비스를 이용하는 고객이 누구이며, 무엇을 가장 원하는지를 가장 먼저 깊게 고민합니다. 
+                        내부적으로 내가 속해있는 팀의 목표, 팀원들의 성향과 역량을 판단할 수 있어야 기획자로서 조화로운 협업을 이루고 마침내 최고의 성과를 낼 수 있음을 그동안의 경험으로 느꼈습니다.
+                    </p>
+                    <div class="space-y-6">
+                        <div class="border-t border-white/10 pt-8">
+                            <div class="flex items-center justify-between mb-8">
+                                <h5 class="text-[#ff3e00] text-xs font-bold uppercase tracking-widest flex items-center gap-2">
+                                    <span class="w-8 h-[1px] bg-[#ff3e00]"></span> Work Experience
+                                </h5>
+                                <span class="text-gray-500 text-[11px] font-medium tracking-wide bg-white/5 px-3 py-1 rounded-full border border-white/5">총 6년 10개월</span>
+                            </div>
+                            <div class="space-y-10 ml-5 border-l border-white/10 pl-8">
+                                <div class="work-item">
+                                    <div class="work-dot"></div>
+                                    <div class="flex flex-col md:flex-row md:justify-between mb-2 gap-1">
+                                        <h6 class="text-xl font-bold text-white">천재교육</h6>
+                                        <span class="text-[#ff3e00] text-xs space-font font-medium">2023.02 - 재직 중 (3년)</span>
+                                    </div>
+                                    <p class="text-sm text-gray-400 mb-4 font-medium">IT개발1팀 ㅣ 웹기획 ㅣ 팀원</p>
+                                    <ul class="text-sm text-gray-500 space-y-2 font-light">
+                                        <li>• 온라인 전자 칠판 <b>'클래스보드 Admin'</b> 신규 구축</li>
+                                        <li>• 전국 맞춤학습 교과서 <b>‘AI 디지털 교과서’</b> 신규 구축</li>
+                                        <li>• All in One 학급운영 플랫폼 <b>‘우리반T셀파’</b> 서비스 고도화</li>
+                                        <li>• 온라인 전자 칠판 <b>‘클래스보드 위젯 22종’</b> 서비스 고도화</li>
+                                        <li>• 수업활동 지원 <b>‘지니아튜터’</b> 서비스 고도화</li>
+                                        <li>• 선생님 학습자료 공유 커뮤니티 <b>‘쌤채널’</b> 서비스 출시</li>
+                                    </ul>
+                                </div>
+                                <div class="work-item">
+                                    <div class="work-dot"></div>
+                                    <div class="flex flex-col md:flex-row md:justify-between mb-2 gap-1">
+                                        <h6 class="text-xl font-bold text-white">아로정보기술</h6>
+                                        <span class="text-[#ff3e00] text-xs space-font font-medium">2019.07 - 2023.01 (3년 7개월)</span>
+                                    </div>
+                                    <p class="text-sm text-gray-400 mb-4 font-medium">L&I기획실 ㅣ 서비스 기획 ㅣ 주임</p>
+                                    <ul class="text-sm text-gray-500 space-y-2 font-light">
+                                        <li>• 대중교통 정보 API 브랜드 <b>‘ODsay LAB’</b> 서비스 고도화</li>
+                                        <li>• 운동App <b>‘TRANGGLE’</b> 서비스 고도화</li>
+                                        <li>• 전국 길찾기 지도 <b>‘ODsay Map Browser’</b> 서비스 고도화</li>
+                                        <li>• 전주시 대중교통 안내 <b>‘Map Browser’</b> 신규 구축</li>
+                                        <li>• 한국관광공사 <b>‘Visit Korea’</b> 모바일App 신규 구축</li>
+                                        <li>• 경비 절감을 위한 <b>‘초정밀 버스 정보’</b> 시스템 구축 제안</li>
+                                    </ul>
+                                </div>
+                                <div class="work-item">
+                                    <div class="work-dot"></div>
+                                    <div class="flex flex-col md:flex-row md:justify-between mb-2 gap-1">
+                                        <h6 class="text-xl font-bold text-white">서한통산</h6>
+                                        <span class="text-[#ff3e00] text-xs space-font font-medium">2019.03 - 2019.05 (3개월)</span>
+                                    </div>
+                                    <p class="text-sm text-gray-400 mb-4 font-medium">영업기획 ㅣ 팀원</p>
+                                    <ul class="text-sm text-gray-500 space-y-2 font-light">
+                                        <li>• 아웃소싱 제안서 작성 & 실적 보고서 관리</li>
+                                        <li>• 고객사 지점별 파견인력 관리</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="tools" class="py-48">
+        <div class="container-custom">
+            <div class="mb-12">
+                <h3 class="space-font text-5xl md:text-7xl font-bold opacity-10 uppercase tracking-tighter">Work_Tools</h3>
+            </div>
+            <div class="flex flex-wrap gap-x-8 gap-y-4 mb-16 border-b border-white/5 pb-8 scroll-reveal">
+                <button onclick="filterTools('all')" class="tab-btn active text-sm font-bold tracking-widest uppercase py-2" data-tab="all">전체</button>
+                <button onclick="filterTools('document')" class="tab-btn text-sm font-bold tracking-widest uppercase py-2" data-tab="document">문서 작성</button>
+                <button onclick="filterTools('design')" class="tab-btn text-sm font-bold tracking-widest uppercase py-2" data-tab="design">디자인</button>
+                <button onclick="filterTools('communication')" class="tab-btn text-sm font-bold tracking-widest uppercase py-2" data-tab="communication">커뮤니케이션</button>
+                <button onclick="filterTools('analysis')" class="tab-btn text-sm font-bold tracking-widest uppercase py-2" data-tab="analysis">분석</button>
+                <button onclick="filterTools('ai')" class="tab-btn text-sm font-bold tracking-widest uppercase py-2" data-tab="ai">AI</button>
+                <button onclick="filterTools('video')" class="tab-btn text-sm font-bold tracking-widest uppercase py-2" data-tab="video">영상 편집</button>
+            </div>
+            <div id="tools-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6 scroll-reveal"></div>
+        </div>
+    </section>
+
+    <section id="projects" class="py-48 bg-[#0a0a0a]">
+        <div class="container-custom">
+            <div class="mb-20">
+                <h3 class="space-font text-5xl md:text-7xl font-bold opacity-10 uppercase tracking-[0.1em]">Experience</h3>
+            </div>
+            <div class="flex flex-col">
+                <!-- Project 01 -->
+                <div class="project-card py-20 group cursor-pointer scroll-reveal" onclick="openDrawer('edu_aidt')">
+                    <div class="flex flex-col md:flex-row md:items-start justify-between gap-8 md:gap-12">
+                        <div class="project-meta shrink-0">
+                            <span class="text-gray-600 space-font text-xl font-light mb-2">01</span>
+                            <div class="project-type-badge">신규 구축</div>
+                        </div>
+                        <h4 class="project-title font-bold group-hover:text-white transition flex-grow text-left">
+                            전국 맞춤학습 교과서<br> 
+                            <span class="text-white group-hover:text-[#ff3e00] transition-colors">AI 디지털 교과서 (AIDT)</span>
+                        </h4>
+                        <div class="flex items-center shrink-0 pt-4">
+                            <div class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-[#ff3e00] transition-colors">
+                                <i class="fa-solid fa-arrow-right-long text-xl opacity-30 group-hover:opacity-100 group-hover:text-[#ff3e00] transition-all"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 02 -->
+                <div class="project-card py-20 group cursor-pointer scroll-reveal" onclick="openDrawer('edu_tsherpa')">
+                    <div class="flex flex-col md:flex-row md:items-start justify-between gap-8 md:gap-12">
+                        <div class="project-meta shrink-0">
+                            <span class="text-gray-600 space-font text-xl font-light mb-2">02</span>
+                            <div class="project-type-badge">고도화</div>
+                        </div>
+                        <h4 class="project-title font-bold group-hover:text-white transition flex-grow text-left">
+                            All in One 학급 운영 플랫폼<br> 
+                            <span class="text-white group-hover:text-[#ff3e00] transition-colors">우리반T셀파</span>
+                        </h4>
+                        <div class="flex items-center shrink-0 pt-4">
+                            <div class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-[#ff3e00] transition-colors">
+                                <i class="fa-solid fa-arrow-right-long text-xl opacity-30 group-hover:opacity-100 group-hover:text-[#ff3e00] transition-all"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 03 -->
+                <div class="project-card py-20 group cursor-pointer scroll-reveal" onclick="openDrawer('admin')">
+                    <div class="flex flex-col md:flex-row md:items-start justify-between gap-8 md:gap-12">
+                        <div class="project-meta shrink-0">
+                            <span class="text-gray-600 space-font text-xl font-light mb-2">03</span>
+                            <div class="project-type-badge">고도화</div>
+                        </div>
+                        <h4 class="project-title font-bold group-hover:text-white transition flex-grow text-left">
+                            대중교통 길찾기 API 서비스<br> 
+                            <span class="text-white group-hover:text-[#ff3e00] transition-colors">ODsay LAB</span>
+                        </h4>
+                        <div class="flex items-center shrink-0 pt-4">
+                            <div class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-[#ff3e00] transition-colors">
+                                <i class="fa-solid fa-arrow-right-long text-xl opacity-30 group-hover:opacity-100 group-hover:text-[#ff3e00] transition-all"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 04 -->
+                <div class="project-card py-20 group cursor-pointer scroll-reveal" onclick="openDrawer('tranggle')">
+                    <div class="flex flex-col md:flex-row md:items-start justify-between gap-8 md:gap-12">
+                        <div class="project-meta shrink-0">
+                            <span class="text-gray-600 space-font text-xl font-light mb-2">04</span>
+                            <div class="project-type-badge">SI</div>
+                        </div>
+                        <h4 class="project-title font-bold group-hover:text-white transition flex-grow text-left">
+                            GPS 게임 같은 운동App<br> 
+                            <span class="text-white group-hover:text-[#ff3e00] transition-colors">TRANGGLE</span>
+                        </h4>
+                        <div class="flex items-center shrink-0 pt-4">
+                            <div class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-[#ff3e00] transition-colors">
+                                <i class="fa-solid fa-arrow-right-long text-xl opacity-30 group-hover:opacity-100 group-hover:text-[#ff3e00] transition-all"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="drawer-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[90] opacity-0 pointer-events-none transition-opacity duration-500" onclick="closeDrawer()"></div>
+    <div id="drawer" class="fixed top-0 right-0 h-full w-full md:w-[900px] bg-[#0a0a0a] z-[100] transform translate-x-full transition-transform duration-500 ease-in-out border-l border-white/10 overflow-y-auto">
+        <div class="sticky top-0 bg-[#0a0a0a]/90 backdrop-blur-md px-6 py-4 flex justify-between items-center z-10 border-b border-white/5">
+            <span class="space-font text-[10px] font-bold text-[#ff3e00] uppercase tracking-[0.3em]">Experience Details</span>
+            <button onclick="closeDrawer()" class="hover:rotate-90 transition-transform duration-300 p-1 text-white/40 hover:text-white">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <div id="drawer-content" class="p-8 md:p-16 pt-12"></div>
+    </div>
+
+    <footer id="contact" class="pt-64 pb-48 text-center">
+        <div class="container-custom">
+            <h2 class="text-5xl md:text-[8rem] font-black mb-12 scroll-reveal tracking-tighter">LET'S CONNECT.</h2>
+            <div class="flex flex-col items-center gap-6">
+                <a href="mailto:hisep1205@gmail.com" target="_blank" class="text-xl md:text-3xl text-gray-400 hover:text-[#ff3e00] transition border-b border-gray-800 pb-2 space-font font-light tracking-wide">
+                    hisep1205@gmail.com
+                </a>
+                <div class="mt-12 text-xs text-gray-600 space-font tracking-[0.5em] uppercase">
+                    &copy; 2026. YUN PORTFOLIO. ALL RIGHTS RESERVED.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const nav = document.getElementById('main-nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        });
+
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('active'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
+
+        const toolData = [
+            { name: "PPT", cats: ["document"], icon: "fa-regular fa-file-powerpoint" },
+            { name: "Excel", cats: ["document"], icon: "fa-regular fa-file-excel" },
+            { name: "Word", cats: ["document"], icon: "fa-regular fa-file-word" },
+            { name: "Google Tools", cats: ["document"], icon: "fa-brands fa-google" },
+            { name: "한컴오피스", cats: ["document"], icon: "fa-solid fa-file-lines" },
+            { name: "Notion", cats: ["document", "communication"], icon: "fa-solid fa-note-sticky" },
+            { name: "Figma", cats: ["document", "design"], icon: "fa-brands fa-figma" },
+            { name: "Zeplin", cats: ["design"], icon: "fa-solid fa-gem" },
+            { name: "Slack", cats: ["communication"], icon: "fa-brands fa-slack" },
+            { name: "Google Analytics", cats: ["analysis"], icon: "fa-solid fa-chart-line" },
+            { name: "Gemini", cats: ["ai"], icon: "fa-solid fa-wand-magic-sparkles" },
+            { name: "ChatGPT", cats: ["ai"], icon: "fa-solid fa-robot" },
+            { name: "Perplexity", cats: ["ai"], icon: "fa-solid fa-brain" },
+            { name: "클로바노트", cats: ["ai"], icon: "fa-solid fa-ear-listen" },
+            { name: "Canva", cats: ["design", "ai"], icon: "fa-solid fa-palette" },
+            { name: "V0", cats: ["ai"], icon: "fa-solid fa-code" },
+            { name: "Clip Champ", cats: ["video"], icon: "fa-solid fa-video" },
+            { name: "Vrew", cats: ["video"], icon: "fa-solid fa-closed-captioning" }
+        ];
+
+        function filterTools(category) {
+            const grid = document.getElementById('tools-grid');
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if(btn.getAttribute('data-tab') === category) btn.classList.add('active');
+            });
+            const filtered = category === 'all' ? toolData : toolData.filter(t => t.cats.includes(category));
+            grid.innerHTML = filtered.map((tool, index) => `
+                <div class="tool-card tool-animate" style="animation-delay: ${index * 0.05}s">
+                    <i class="${tool.icon}"></i>
+                    <span class="text-[12px] font-bold text-gray-200 tracking-tight leading-tight px-1 text-center">${tool.name}</span>
+                </div>
+            `).join('');
+        }
+        window.addEventListener('load', () => filterTools('all'));
+
+        const projects = {
+            edu_aidt: {
+                title: "전국 맞춤학습 교과서<br> AI 디지털 교과서 (AIDT)",
+                period: "2024.01 ~ 2024.12 (12개월)",
+                role: "학습창 기획PL (기여도 50%)",
+                pletform: "Web",
+                image: "https://i.postimg.cc/k4frpPNj/AIDT1.png",
+                problem: "교육부 주관, 2025년 전국적으로 시행하는 ‘AI 디지털교과서’ 플랫폼 구축 업무에 참여했습니다. 담당업무는 교사-학생간 실시간 수업이 이뤄지는 학습창을 전담으로 기획했으며, AI 학업 성취도 분석을 통한 맞춤학습 로직 설계 및 각 교과목 특화 학습도구 14종을 추가로 기획했습니다. 학습 관리 시스템(LMS) - 학습창 - 학습 콘텐츠 관리 시스템(LCMS)간 데이터 연계에 따른 이슈 관리를 수행했습니다.",
+                process: [
+                    { title: "① 학습창 및 사용자 경험(UX) 기획", items: ["사용자 체류기간이 가장 긴 화면으로, 학습창 페이지 전환 최소화", "핵심 요소(학습 콘텐츠, 평가 문항 등)가 강조된 심플한 UI/UX 설계", "점진적 학습자 수준 향상을 유도하는 User Flow 기획", "학년/과목 특성에 맞는 14종 학습도구 기획"] },
+                    { title: "② 학습 콘텐츠 연동 관리", items: ["각 과목별 디지털화된 약 16만개 이상의 학습 콘텐츠 이슈 관리", "자체 보유한 약 20만개 이상의 평가 문항 이슈 관리"] },
+                    { title: "③ 맞춤 학습 로직 설계", items: ["학습 활동으로 수집 가능한 데이터 기준 정의 (교육부 전송)", "실시간 누적되는 학습 결과를 분석하여 현재 학습자 수준에 가장 적합한 문항 출제", "학업 성취도 기반의 다음 학습 경로 추천 프로세스 마련"] }
+                ],
+                results: [
+                    { label: "28개 교과서 출원 신청", value: "96% 합격률 달성" },
+                    { label: "AIDT 합격 발행사 기준", value: "최다 출원, 최다 합격" }
+                ]
+            },
+            edu_tsherpa: {
+                title: "All in One 학급 운영 플랫폼<br> 우리반T셀파",
+                period: "2023. 03 ~ 12 (10개월)",
+                role: "기획PL (기여도 50%)",
+                pletform: "Web / App",
+                image: "https://i.postimg.cc/QNf9pB7J/ulibantselpa1.png",
+                problem: "사용자 유형(교사/학생/학부모)별 수집된 VOC를 분석하여 서비스 고도화를 성공적으로 완료했습니다. 전국 학교 학급운영 일정에 맞춰 WBS 일정을 산출하고 프로젝트 목표, 정책 수립 및 요구사항 기반의 기능명세서, IA를 작성했습니다. User Flow를 고려한 화면설계서(Web, App)를 작성하고 개발이 완료된 이후 테스트 시나리오 기반 QA를 거쳐 일정 내 고도화된 서비스를 오픈했습니다.",
+                process: [
+                    { title: "① 요구사항 분석", items: ["VOC, 전략사업부 의견 취합하여 요구사항 종합", "유사도가 높은 내용들을 그룹화하여 구체적인 기능 목록으로 리스트업", "실현 가능성, 업무 볼륨, 중요도 등의 기준으로 프로젝트 진행 범위 산출"] },
+                    { title: "② 프로젝트 일정 수립", items: ["각 파트별(디자인/퍼블/개발) 고도화 기능 검토 및 사전 이슈 체크", "전국 초/중/고등학교 학급운영 일정에 맞춰 마감일 확정 및 각 파트별 세부 일정 수립"] },
+                    { title: "③ 프로젝트 정책 수립 / 기능 구체화", items: ["요구사항 기반 도출된 신규 기능들이 적용된 기능명세서, IA 최신화", "서비스 전체 구조에서 기존 기능 개편 및 신규 적용될 기능 별도 표시", "AS-IS / TO-BE 기반 각 파트 담당자와 협의"] },
+                    { title: "④ 화면 설계", items: ["고도화 기능별 화면설계서(Web, App) 작성", "서비스 목표, 정책, 레이아웃 기준 등 고도화에 따른 핵심 변경사항 포함 상세 작성", "사용자 유형별 User Flow 시각화 및 푸시알림 기준 재정립"] },
+                    { title: "⑤ 품질 관리 및 런칭", items: ["테스트 시나리오 작성", "테스트 환경 구축 및 각 기능별 테스트 케이스에 따른 정상 작동 여부 검수", "사용자 이상 행동에 따른 특이 케이스 등 종합적인 서비스 결함 개선하여 배포"] }
+                ],
+                results: [
+                    { label: "사용자 중심", value: "요구사항 분석 및 우선순위화" },
+                    { label: "교육 일정 기반", value: "전략적 프로젝트 관리" }
+                ]
+            },
+            admin: {
+                title: "대중교통 길찾기 API 서비스<br> ODsay LAB",
+                period: "2022. 02 ~ 06 (5개월)",
+                role: "기획PL (기여도 60%)",
+                pletform: "Web",
+                image: "https://i.postimg.cc/pVmhJWJ7/ODsay1.png",
+                problem: "네이버 파트너사인 ODsay LAB에서 국내 대중교통 정보 API 제공 서비스의 운영 기획자로 근무하며, 데이터 분석 기반의 서비스 리뉴얼 프로젝트를 주도했습니다. Google Analytics를 통해 신규 유입 감소 추세와 비효율적인 고객관리 프로세스를 파악하고, 온라인 결제 시스템 도입, 구독형 상품 출시, 커뮤니티 구축 등 전방위적 서비스 개선 기획·실행했습니다. 이를 통해 신규 고객 20% 증가 및 운영 효율성을 개선했습니다.",
+                process: [
+                    { title: "① 문제 정의", items: ["Google Analytics 활용 신규 유입 감소 트렌드 분석 및 고객관리에 과도한 인적 리소스 투입 인식", "내/외부 이해관계자 요구사항 수집 및 우선순위화를 통해 핵심 개선과제 도출"] },
+                    { title: "② 실행 계획 수립", items: ["서비스 리뉴얼에 대한 전 과정별 세부업무 정의하여 WBS 일정 산출", "결제 시스템 도입을 위한 PG사 선정, 결제모듈 연동 적합성 평가 등 리뉴얼 진행 전 선행사항 체크", "사용자 커뮤니티 생성을 위한 유사 서비스 벤치마킹 및 서비스 리뉴얼 이후 홍보 계획 수립"] },
+                    { title: "③ 서비스 기획 및 설계", items: ["사용자 시나리오 및 플로우차트 작성", "IA, 기능명세서, 화면설계서(Front-End/Back-Office) 작성", "서비스 운영정책 전면 개정"] },
+                    { title: "④ 품질 관리 및 마케팅 전략", items: ["테스트 시나리오 작성 및 전사 QA 진행", "다채널 홍보 전략 수립: 보도자료, 주간 콘텐츠 제작, YouTube 채널 활용"] },
+                    { title: "⑤ 런칭 및 사후 관리", items: ["서비스 리뉴얼 오픈 및 운영 매뉴얼 작성", "내부 고객관리 프로세스 간소화 및 결제 시스템 도입으로 사용자 편의성 증대, 서비스 이용 접근성 향상", "지속적 홍보 콘텐츠 마케팅 실행 (언론 배포, 포스터 제작, 영상 콘텐츠 등)"] }
+                ],
+                results: [
+                    { label: "전년 동기 대비", value: "신규 고객 20% 증가" },
+                    { label: "고객관리 프로세스 간소화", value: "운영 효율화" }
+                ]
+            },
+            tranggle: {
+                title: "GPS 게임 같은 운동App<br> TRANGGLE",
+                period: "2022. 02 ~ 2022. 8 (7개월)",
+                role: "기획PL (기여도 50%)",
+                pletform: "Web",
+                image: "https://i.postimg.cc/63SbDMLk/teulaeng-geul1.png",
+                problem: "발주사의 App 자체 개발에 맞춰 Web 리뉴얼을 수주하여 진행한 프로젝트입니다. App 기준으로 개편되는 내용을 분석하여 Web 적용 기능을 분류하고, App-Web 간 방대한 데이터 연계를 고려한 Web 구조 재설계 및 크로스플랫폼 통일성 확보를 목표로 수행했습니다.",
+                process: [
+                    { title: "① 요구사항 정의 및 구조 설계", items: ["App 리뉴얼 기능 분석 후 Web 적용 기능 분류", "App-Web 데이터 연계 시나리오 도출 및 Web 구조 재설계","Web 리뉴얼 일정 역산출 (App 일정 기준)"] },
+                    { title: "② 화면설계 및 반복 검증", items: ["재설계한 Web 구조 기반 파트별 화면설계서 작성", "핵심 기능 중심 초안 작성 및 발주사 검토","App 개편 변경사항 반영하여 총 9차례 화면설계서 최신화","각 버전별 내부 파트(디자인/퍼블/개발) 검수, 발주사 검토 반복 진행"] },
+                    { title: "③ 커뮤니케이션 및 조율", items: ["App 리뉴얼 각 단계마다 App-Web 통일성 검토 회의 진행", "내부 파트 간 이슈 조율 및 발주사와의 요구사항 변경 협의 전담","9차례 버전 관리 과정에서 변경 이력 문서화 및 공유"] },
+                    { title: "④ 품질 관리 및 배포", items: ["메뉴별 테스트 시나리오 작성 및 1차 핵심 기능 검증", "2차 디자인/문구 등 부차적 수정사항 종합 정리 및 최종 수정","일정 내 서비스 정상 오픈 및 이행계약 기준 산출물 납품 완료"] }
+                ],
+                results: [
+                    { label: "복잡한 App-Web 연계", value: "구조 설계 및 통일성 확보" },
+                    { label: "애자일 방식", value: "유연한 프로젝트 관리" }
+                ]
+            }
+        };
+
+        function openDrawer(key) {
+            const data = projects[key];
+            const content = `
+                <div class="space-y-12 animate-in fade-in slide-in-from-right-4 duration-500">
+                    <section>
+                        <div class="flex flex-wrap gap-4 text-xs font-medium text-gray-500 mb-6 uppercase tracking-widest">
+                            <span>${data.period}</span>
+                            <span class="text-white/20">|</span>
+                            <span>${data.role}</span>
+                            <span class="text-white/20">|</span>
+                            <span>${data.pletform}</span>
+                        </div>
+                        <h2 class="text-3xl md:text-5xl font-black mb-8 leading-tight tracking-tighter">${data.title}</h2>
+                    </section>
+                    
+                    ${data.image ? `
+                    <section class="w-full bg-[#18181b66] rounded-2xl overflow-hidden shadow-2xl border border-white/10">
+                        <img src="${data.image}" alt="Project Showcase" class="w-full h-auto block" onerror="this.src='https://placehold.co/1200x800/111/fff?text=PROJECT+IMAGE'">
+                    </section>
+                    ` : ''}
+
+                    <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        ${data.results.map(r => `
+                            <div class="result-card bg-white/5 border border-white/10 p-6 rounded-2xl group/card border-l-4 border-l-[#ff3e00]">
+                                <span class="result-label text-[10px] text-gray-500 uppercase block mb-2 tracking-widest">${r.label}</span>
+                                <span class="result-value text-xl md:text-2xl font-bold text-white block">${r.value}</span>
+                            </div>
+                        `).join('')}
+                    </section>
+
+                    <section class="space-y-8">
+                        <div class="border-l-2 border-[#ff3e00] pl-8 py-1">
+                            <h4 class="text-xs font-black text-white/50 uppercase mb-3 tracking-widest">Project Overview</h4>
+                            <p class="text-gray-300 leading-relaxed font-light text-sm md:text-base whitespace-pre-wrap">${data.problem}</p>
+                        </div>
+                    </section>
+
+                    <section class="bg-zinc-900/40 p-8 md:p-10 rounded-3xl border border-white/5">
+                        <h4 class="text-xs font-black text-white uppercase mb-8 flex items-center gap-3 tracking-[0.2em]">
+                            <i class="fa-solid fa-diagram-project text-[#ff3e00]"></i> tasks & Details
+                        </h4>
+                        <div class="space-y-10">
+                            ${data.process.map(group => `
+                                <div class="space-y-4">
+                                    <h5 class="text-white font-bold text-sm">${group.title}</h5>
+                                    <ul class="space-y-3 ml-2">
+                                        ${group.items.map(item => `
+                                            <li class="flex items-start gap-3 text-gray-400 text-sm font-light">
+                                                <span class="text-[#ff3e00] mt-1.5 w-1 h-1 rounded-full bg-[#ff3e00] shrink-0"></span>
+                                                ${item}
+                                            </li>
+                                        `).join('')}
+                                    </ul>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </section>
+                </div>
+            `;
+            const drawer = document.getElementById('drawer');
+            drawer.scrollTop = 0;
+            
+            document.getElementById('drawer-content').innerHTML = content;
+            drawer.classList.remove('translate-x-full');
+            document.getElementById('drawer-overlay').classList.remove('opacity-0', 'pointer-events-none');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDrawer() {
+            document.getElementById('drawer').classList.add('translate-x-full');
+            document.getElementById('drawer-overlay').classList.add('opacity-0', 'pointer-events-none');
+            document.body.style.overflow = 'auto';
+        }
+    </script>
+</body>
+</html>
